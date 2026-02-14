@@ -32,7 +32,6 @@
             color: var(--text);
         }
 
-        /* Particle Canvas */
         #canvas {
             position: absolute;
             top: 0;
@@ -40,43 +39,36 @@
             z-index: 1;
         }
 
-        /* Polaroid Corner Images */
-        .corner-img {
+        /* --- Floating 6 Photos Logic --- */
+        .photo-float {
             position: fixed;
-            width: 90px;
-            height: 90px;
-            z-index: 100;
-            border: 4px solid white;
-            border-bottom: 18px solid white; 
+            bottom: -150px;
+            width: 85px;
+            height: 85px;
+            z-index: 2; /* Behind the glass card but above the canvas */
+            border: 3px solid white;
+            border-bottom: 15px solid white;
             border-radius: 2px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.4);
             object-fit: cover;
-            transition: transform 0.5s ease;
+            animation: floatUp 12s linear infinite;
+            opacity: 0.8;
         }
 
-        .top-left {
-            top: 25px;
-            left: 20px;
-            transform: rotate(-12deg);
-            animation: float-left 5s ease-in-out infinite;
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.8; }
+            100% { transform: translateY(-120vh) rotate(20deg); opacity: 0; }
         }
 
-        .top-right {
-            top: 25px;
-            right: 20px;
-            transform: rotate(12deg);
-            animation: float-right 5s ease-in-out infinite;
-        }
-
-        @keyframes float-left {
-            0%, 100% { transform: translateY(0) rotate(-12deg); }
-            50% { transform: translateY(-12px) rotate(-8deg); }
-        }
-
-        @keyframes float-right {
-            0%, 100% { transform: translateY(0) rotate(12deg); }
-            50% { transform: translateY(-12px) rotate(16deg); }
-        }
+        /* Staggering positions and timing for the 6 photos */
+        .p1 { left: 5%;  animation-delay: 0s;  width: 90px; height: 90px; }
+        .p2 { left: 20%; animation-delay: 4s;  width: 80px; height: 80px; }
+        .p3 { left: 45%; animation-delay: 8s;  width: 95px; height: 95px; }
+        .p4 { left: 70%; animation-delay: 2s;  width: 85px; height: 85px; }
+        .p5 { left: 85%; animation-delay: 6s;  width: 90px; height: 90px; }
+        .p6 { left: 35%; animation-delay: 10s; width: 80px; height: 80px; }
 
         /* Main Glass Card */
         .screen {
@@ -103,6 +95,158 @@
 
         h1 {
             font-family: 'Dancing Script', cursive;
+            font-size: 2.8rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 8px rgba(255, 77, 109, 0.3);
+        }
+
+        p {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            font-weight: 300;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1.5px;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(255, 77, 109, 0.4);
+            transition: 0.3s;
+        }
+
+        .btn:active { transform: scale(0.92); }
+
+        .heart-svg {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 15px;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 5px var(--primary)); }
+            50% { transform: scale(1.2); filter: drop-shadow(0 0 20px var(--primary)); }
+        }
+
+        .nepali-text {
+            font-size: 1.3rem;
+            color: var(--secondary);
+            margin-top: 15px;
+            display: block;
+            font-weight: 600;
+            line-height: 1.8;
+        }
+
+        .content-area {
+            text-align: left;
+            max-height: 45vh;
+            overflow-y: auto;
+            padding: 5px;
+            scrollbar-width: none;
+        }
+        .content-area::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body>
+
+    <canvas id="canvas"></canvas>
+
+    <img src="photo1.jpg" class="photo-float p1" alt="1">
+    <img src="photo2.jpg" class="photo-float p2" alt="2">
+    <img src="photo3.jpg" class="photo-float p3" alt="3">
+    <img src="photo4.jpg" class="photo-float p4" alt="4">
+    <img src="photo5.jpg" class="photo-float p5" alt="5">
+    <img src="photo6.jpg" class="photo-float p6" alt="6">
+
+    <div id="screen1" class="screen">
+        <div class="heart-svg">
+            <svg viewBox="0 0 32 29.6" fill="#ff4d6d">
+                <path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2
+                c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z"/>
+            </svg>
+        </div>
+        <h1>Dhanmati</h1>
+        <p>You sent me a heart I can touch... <br>So I built you a world you can feel.</p>
+        <button class="btn" onclick="nextScreen(1)">Open My Reply, Sweety 🌹</button>
+    </div>
+
+    <div id="screen2" class="screen hidden">
+        <h1>To My Sweety...</h1>
+        <div class="content-area">
+            <p>You are the best gift given by the God ever to me.</p>
+            <p style="color: var(--secondary); font-weight: 600; text-align: center;"> 
+                Yes i will love You for the rest of my life more than you, Darling. 
+                <br><b>Muah 💋😘 .</b>
+            </p>
+            <p>You are my Motivation, My Happiness and My Superpower. Thanks For your Message.</p>
+            <span class="nepali-text">म हजुरलाई धेरै धेरै धेरै माया गर्छु। मुटु। ❤️</span>
+        </div>
+        <button class="btn" style="margin-top: 15px;" onclick="restart()">Read Again</button>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        
+        function initCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', initCanvas);
+        initCanvas();
+
+        class HeartParticle {
+            constructor() { this.reset(); }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = canvas.height + 20;
+                this.size = Math.random() * 5 + 2;
+                this.speedY = Math.random() * -1 - 0.5;
+                this.opacity = Math.random() * 0.4 + 0.1;
+            }
+            update() {
+                this.y += this.speedY;
+                if (this.y < -20) this.reset();
+            }
+            draw() {
+                ctx.fillStyle = `rgba(255, 77, 109, ${this.opacity})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < 40; i++) particles.push(new HeartParticle());
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        function nextScreen(num) {
+            document.getElementById(`screen${num}`).classList.add('hidden');
+            document.getElementById(`screen${num + 1}`).classList.remove('hidden');
+        }
+
+        function restart() {
+            document.getElementById('screen2').classList.add('hidden');
+            document.getElementById('screen1').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
             font-size: 2.8rem;
             color: var(--primary);
             margin-bottom: 10px;
@@ -253,3 +397,4 @@
     </script>
 </body>
 </html>
+
