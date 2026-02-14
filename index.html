@@ -21,7 +21,7 @@
         }
 
         body {
-            /* A Deep Romantic Night Sky Gradient */
+            /* Deep Romantic Night Sky Gradient */
             background: linear-gradient(135deg, #1a0b2e 0%, #4a192c 50%, #1a0b2e 100%);
             font-family: 'Poppins', sans-serif;
             height: 100vh;
@@ -44,21 +44,19 @@
         /* --- Floating 6 Photos Logic --- */
         .photo-float {
             position: fixed;
-            bottom: -200px; /* Start below screen */
+            bottom: -200px;
             width: 90px;
             height: 90px;
             z-index: 5; 
             border: 4px solid white;
-            border-bottom: 18px solid white; /* Polaroid Look */
+            border-bottom: 18px solid white; 
             border-radius: 2px;
             box-shadow: 0 8px 20px rgba(0,0,0,0.5);
             object-fit: cover;
             opacity: 0; 
-            /* Infinite loop moving upwards */
             animation: floatUp 15s linear infinite;
         }
 
-        /* Animation: Rise from bottom to top */
         @keyframes floatUp {
             0% { transform: translateY(0) rotate(-5deg); opacity: 0; }
             10% { opacity: 0.9; }
@@ -66,7 +64,6 @@
             100% { transform: translateY(-120vh) rotate(5deg); opacity: 0; }
         }
 
-        /* Staggered Timings (So they don't all appear at once) */
         .p1 { left: 5%;  animation-delay: 0s;  transform: rotate(-10deg); }
         .p2 { left: 25%; animation-delay: 5s;  transform: rotate(5deg);   width: 80px; height: 80px; }
         .p3 { left: 45%; animation-delay: 10s; transform: rotate(-5deg);  width: 100px; height: 100px; }
@@ -129,17 +126,28 @@
 
         .btn:active { transform: scale(0.92); }
 
-        .heart-icon {
-            font-size: 3rem;
-            margin-bottom: 15px;
-            animation: heartbeat 1.5s infinite;
-            display: inline-block;
+        /* Music Vinyl Icon Animation */
+        .music-disc {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: conic-gradient(#333 0% 25%, #555 25% 50%, #333 50% 75%, #555 75% 100%);
+            margin: 0 auto 20px;
+            border: 3px solid #ff4d6d;
+            box-shadow: 0 0 15px rgba(255, 77, 109, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: spin 3s linear infinite;
         }
 
-        @keyframes heartbeat {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.2); }
+        .music-disc::after {
+            content: '♪';
+            color: white;
+            font-size: 2rem;
         }
+
+        @keyframes spin { 100% { transform: rotate(360deg); } }
 
         .nepali-text {
             font-size: 1.3rem;
@@ -163,6 +171,10 @@
 
     <canvas id="canvas"></canvas>
 
+    <audio id="bgMusic" loop>
+        <source src="music.mp3" type="audio/mpeg">
+    </audio>
+
     <img src="photo1.jpg" class="photo-float p1" alt="Our Memory 1">
     <img src="photo2.jpg" class="photo-float p2" alt="Our Memory 2">
     <img src="photo3.jpg" class="photo-float p3" alt="Our Memory 3">
@@ -171,10 +183,10 @@
     <img src="photo6.jpg" class="photo-float p6" alt="Our Memory 6">
 
     <div id="screen1" class="screen">
-        <div class="heart-icon">❤️</div>
+        <div class="music-disc"></div>
         <h1>Dhanmati</h1>
         <p>You sent me a heart I can touch... <br>So I built you a world you can feel.</p>
-        <button class="btn" onclick="nextScreen(1)">Open My Reply, Sweety 🌹</button>
+        <button class="btn" onclick="startApp()">Open My Reply, Sweety 🌹</button>
     </div>
 
     <div id="screen2" class="screen hidden">
@@ -205,31 +217,23 @@
         initCanvas();
 
         class Particle {
-            constructor() { 
-                this.reset(true); 
-            }
-            
+            constructor() { this.reset(true); }
             reset(initial = false) {
                 this.x = Math.random() * canvas.width;
-                // If initial, spread them over screen. If not, start at bottom.
                 this.y = initial ? Math.random() * canvas.height : canvas.height + 20;
-                this.speedY = Math.random() * -1.5 - 0.5; // Upward speed
+                this.speedY = Math.random() * -1.5 - 0.5;
                 this.size = Math.random() * 20 + 10;
                 this.opacity = Math.random() * 0.5 + 0.3;
                 this.swing = Math.random() * 0.5;
                 this.swingCount = Math.random() * 100;
-                // Randomly decide if it's a Rose or a Heart
                 this.type = Math.random() > 0.3 ? '🌹' : '❤️';
             }
-            
             update() {
                 this.y += this.speedY;
                 this.swingCount += 0.05;
-                this.x += Math.sin(this.swingCount) * this.swing; // Gentle sway
-                
+                this.x += Math.sin(this.swingCount) * this.swing;
                 if (this.y < -50) this.reset();
             }
-            
             draw() {
                 ctx.globalAlpha = this.opacity;
                 ctx.font = `${this.size}px serif`;
@@ -238,9 +242,7 @@
             }
         }
 
-        // Create 50 floating items
         for (let i = 0; i < 50; i++) particles.push(new Particle());
-
         function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             particles.forEach(p => { p.update(); p.draw(); });
@@ -248,10 +250,14 @@
         }
         animate();
 
-        // --- Screen Switching Logic ---
-        function nextScreen(num) {
-            document.getElementById(`screen${num}`).classList.add('hidden');
-            document.getElementById(`screen${num + 1}`).classList.remove('hidden');
+        // --- MUSIC & NAVIGATION ---
+        function startApp() {
+            const audio = document.getElementById('bgMusic');
+            audio.volume = 0.6; 
+            audio.play().catch(e => console.log("Please interact with the page first"));
+            
+            document.getElementById('screen1').classList.add('hidden');
+            document.getElementById('screen2').classList.remove('hidden');
         }
 
         function restart() {
